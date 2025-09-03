@@ -1,0 +1,235 @@
+import { ServicePageTemplate } from "@/components/service-page-template"
+
+const refrigeratorsData = {
+  serviceName: "Refrigerator Services",
+  serviceDescription:
+    "Expert refrigerator repair and maintenance services for all brands and models. From cooling issues to electrical problems, our certified technicians ensure your refrigerator runs efficiently.",
+  heroImage: "/refrigerator-repair.png",
+  categories: [
+    {
+      title: "Refrigerator Repairs & Servicing",
+      services: [
+        {
+          id: "general-servicing",
+          name: "General Servicing",
+          description: "Complete refrigerator check-up and maintenance for optimal performance",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Regular maintenance needed",
+            "Performance optimization",
+            "Preventive care",
+            "Energy efficiency check",
+            "Overall health assessment",
+          ],
+        },
+        {
+          id: "electrical-problem",
+          name: "Electrical Problem",
+          description: "Diagnosis and repair of electrical issues in refrigerators",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Refrigerator not starting",
+            "Power supply issues",
+            "Electrical short circuits",
+            "Control panel malfunction",
+            "Wiring problems",
+          ],
+        },
+        {
+          id: "gas-problem",
+          name: "Gas Problem",
+          description: "Refrigerant leak detection and gas refilling services",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Insufficient cooling",
+            "Gas leakage",
+            "Pressure imbalance",
+            "Compressor overheating",
+            "High energy consumption",
+          ],
+        },
+        {
+          id: "compressor-problem",
+          name: "Compressor Problem",
+          description: "Professional compressor repair and replacement services",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Compressor not working",
+            "Strange noises",
+            "Overheating issues",
+            "Frequent on/off cycling",
+            "Poor cooling performance",
+          ],
+        },
+        {
+          id: "pcb-problem",
+          name: "PCB Problem",
+          description: "Circuit board repair for electronic control issues",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Digital display not working",
+            "Temperature control issues",
+            "Timer malfunction",
+            "Auto defrost problems",
+            "Electronic controls failure",
+          ],
+        },
+        {
+          id: "body-repair",
+          name: "Body Repair",
+          description: "Physical damage repair and body restoration services",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Dents and scratches",
+            "Door alignment issues",
+            "Handle problems",
+            "Rust and corrosion",
+            "Physical damage repair",
+          ],
+        },
+        {
+          id: "accessories",
+          name: "Accessories",
+          description: "Replacement and repair of refrigerator accessories and parts",
+          image: "/refrigerator-repair.png",
+          issues: ["Shelves and drawers", "Door seals replacement", "Light bulbs", "Water filters", "Ice maker parts"],
+        },
+        {
+          id: "evaporator-problem",
+          name: "Evaporator Problem",
+          description: "Evaporator coil cleaning and repair services",
+          image: "/refrigerator-repair.png",
+          issues: ["Ice buildup", "Poor cooling", "Frost formation", "Blocked air circulation", "Coil damage"],
+        },
+        {
+          id: "electronic-set-issues",
+          name: "Electronic Set Issues",
+          description: "Timer, bimetal, fuse, and heating coil repairs",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Timer malfunction",
+            "Bimetal problems",
+            "Blown fuses",
+            "Heating coil issues",
+            "Electronic component failure",
+          ],
+        },
+        {
+          id: "fan-motor-problem",
+          name: "Fan Motor Problem",
+          description: "Fan motor repair and replacement for proper air circulation",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Fan not working",
+            "Noisy operation",
+            "Poor air circulation",
+            "Motor overheating",
+            "Irregular cooling",
+          ],
+        },
+        {
+          id: "door-closing-problem",
+          name: "Door Closing Problem",
+          description: "Door seal and closing mechanism repair services",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Door not closing properly",
+            "Loose door seals",
+            "Hinge problems",
+            "Magnetic seal issues",
+            "Air leakage",
+          ],
+        },
+        {
+          id: "water-leakage-problem",
+          name: "Water Leakage Problem",
+          description: "Water leak detection and drainage system repair",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Water pooling inside",
+            "Drain blockage",
+            "Defrost water overflow",
+            "Pipe leakage",
+            "Condensation issues",
+          ],
+        },
+        {
+          id: "electrical-wire-problem",
+          name: "Electrical Wire Problem",
+          description: "Wiring inspection and repair for safe operation",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Loose connections",
+            "Damaged wires",
+            "Short circuit risks",
+            "Power fluctuation damage",
+            "Safety concerns",
+          ],
+        },
+        {
+          id: "bulb-problem",
+          name: "Bulb Problem",
+          description: "Interior light bulb replacement and electrical repair",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Light not working",
+            "Bulb replacement needed",
+            "Switch problems",
+            "Electrical connection issues",
+            "LED light repair",
+          ],
+        },
+        {
+          id: "door-switch-problem",
+          name: "Door Switch Problem",
+          description: "Door switch repair for proper light and cooling control",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "Light stays on",
+            "Switch not responding",
+            "Door sensor issues",
+            "Automatic functions not working",
+            "Energy wastage",
+          ],
+        },
+        {
+          id: "appliance-demo",
+          name: "Appliance Demo",
+          description: "Professional demonstration and setup of new refrigerators",
+          image: "/refrigerator-repair.png",
+          issues: [
+            "New appliance setup",
+            "Feature explanation",
+            "Optimal settings",
+            "Usage guidelines",
+            "Maintenance tips",
+          ],
+        },
+      ],
+    },
+  ],
+  testimonials: [
+    {
+      name: "Priya Sharma",
+      rating: 5,
+      comment: "Quick response and fair pricing. My refrigerator is working perfectly now.",
+      service: "Refrigerator Service",
+    },
+    {
+      name: "Amit Patel",
+      rating: 5,
+      comment: "Professional compressor repair. Excellent service and reasonable rates.",
+      service: "Compressor Problem",
+    },
+    {
+      name: "Sunita Devi",
+      rating: 5,
+      comment: "Fixed the cooling issue quickly. Very satisfied with the service quality.",
+      service: "Gas Problem",
+    },
+  ],
+}
+
+export default function RefrigeratorsPage() {
+  return <ServicePageTemplate {...refrigeratorsData} />
+}

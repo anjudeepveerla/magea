@@ -1,0 +1,242 @@
+import { ServicePageTemplate } from "@/components/service-page-template"
+
+const waterDispensersData = {
+  serviceName: "Water Dispenser Services",
+  serviceDescription:
+    "Expert water dispenser repair and maintenance services for homes and offices. Professional solutions for hot and cold water dispensers with quick response times.",
+  heroImage: "/placeholder.svg?height=400&width=600",
+  categories: [
+    {
+      title: "Water Dispenser Repairs & Servicing",
+      services: [
+        {
+          id: "complete-servicing",
+          name: "Complete Servicing",
+          description: "Comprehensive water dispenser maintenance and sanitization",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Regular maintenance needed",
+            "Water quality check",
+            "Sanitization required",
+            "Performance optimization",
+            "Preventive care",
+          ],
+        },
+        {
+          id: "demo",
+          name: "Demo",
+          description: "Professional setup and demonstration of new water dispensers",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "New appliance setup",
+            "Water bottle installation",
+            "Temperature settings",
+            "Feature explanation",
+            "Usage guidelines",
+          ],
+        },
+        {
+          id: "electrical-problem",
+          name: "Electrical Problem",
+          description: "Electrical system repair and troubleshooting",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Dispenser not starting",
+            "Power supply issues",
+            "Electrical connections",
+            "Control panel problems",
+            "Wiring malfunction",
+          ],
+        },
+        {
+          id: "relay-problem",
+          name: "Relay Problem",
+          description: "Relay repair and replacement for proper operation",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Relay malfunction",
+            "Starting problems",
+            "Intermittent operation",
+            "Control issues",
+            "Component failure",
+          ],
+        },
+        {
+          id: "capacitors-problem",
+          name: "Capacitors Problem",
+          description: "Capacitor diagnosis and replacement services",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Capacitor failure",
+            "Starting difficulties",
+            "Motor problems",
+            "Electrical efficiency loss",
+            "Component burnout",
+          ],
+        },
+        {
+          id: "thermostat-problem",
+          name: "Thermostat Problem",
+          description: "Temperature control and thermostat repair",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Temperature control issues",
+            "Thermostat malfunction",
+            "Inaccurate readings",
+            "Hot/cold water problems",
+            "Temperature fluctuation",
+          ],
+        },
+        {
+          id: "gas-problem",
+          name: "Gas Problem",
+          description: "Refrigerant system repair for cold water function",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Cold water not working",
+            "Gas leakage",
+            "Pressure problems",
+            "Temperature inconsistency",
+            "High energy consumption",
+          ],
+        },
+        {
+          id: "compressor-problem",
+          name: "Compressor Problem",
+          description: "Professional compressor repair for cooling system",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Compressor failure",
+            "Strange noises",
+            "Overheating issues",
+            "Frequent cycling",
+            "Poor cooling performance",
+          ],
+        },
+        {
+          id: "condenser-fan-motor",
+          name: "Condenser Fan Motor",
+          description: "Fan motor repair for optimal heat dissipation",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Fan not working", "Noisy operation", "Motor overheating", "Poor ventilation", "Reduced efficiency"],
+        },
+        {
+          id: "body-repair",
+          name: "Body Repair",
+          description: "Physical damage repair and body restoration",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Dents and scratches",
+            "Tap mounting issues",
+            "Handle problems",
+            "Physical damage",
+            "Aesthetic restoration",
+          ],
+        },
+        {
+          id: "accessories",
+          name: "Accessories",
+          description: "Water dispenser accessories and component replacement",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Broken accessories",
+            "Water bottle holder",
+            "Drip trays",
+            "Internal components",
+            "Replacement parts",
+          ],
+        },
+        {
+          id: "heater-problem",
+          name: "Heater Problem",
+          description: "Hot water heater repair and replacement",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Hot water not working",
+            "Heater malfunction",
+            "Temperature issues",
+            "Heating element problems",
+            "Thermostat issues",
+          ],
+        },
+        {
+          id: "electronic-thermometer",
+          name: "Electronic Thermometer",
+          description: "Temperature monitoring system repair and calibration",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Inaccurate readings",
+            "Display malfunction",
+            "Sensor problems",
+            "Calibration needed",
+            "Electronic failure",
+          ],
+        },
+        {
+          id: "tap-problem",
+          name: "Tap Problem",
+          description: "Water tap repair and replacement services",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Tap not working", "Leaking taps", "Poor water flow", "Hot/cold tap issues", "Dispensing problems"],
+        },
+        {
+          id: "water-bottle-holder",
+          name: "Water Bottle Holder Problem",
+          description: "Bottle holder repair and adjustment services",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Bottle holder broken",
+            "Poor bottle fit",
+            "Holder alignment issues",
+            "Support problems",
+            "Installation issues",
+          ],
+        },
+        {
+          id: "water-leakage",
+          name: "Water Leakage Problem",
+          description: "Water leak detection and plumbing repair",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Water leakage",
+            "Internal leaks",
+            "Bottle connection leaks",
+            "Drip tray overflow",
+            "Plumbing issues",
+          ],
+        },
+        {
+          id: "electrical-wire",
+          name: "Electrical Wire Problem",
+          description: "Wiring inspection and electrical safety repairs",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Loose connections", "Damaged wiring", "Short circuit risks", "Power issues", "Safety concerns"],
+        },
+      ],
+    },
+  ],
+  testimonials: [
+    {
+      name: "Rajesh Gupta",
+      rating: 5,
+      comment: "Excellent water dispenser service. Both hot and cold water working perfectly now.",
+      service: "Water Dispenser Repair",
+    },
+    {
+      name: "Meera Patel",
+      rating: 5,
+      comment: "Quick heater repair service. Hot water function restored efficiently.",
+      service: "Heater Problem",
+    },
+    {
+      name: "Sunil Kumar",
+      rating: 5,
+      comment: "Professional tap repair. No more leakage issues. Highly recommended!",
+      service: "Tap Problem",
+    },
+  ],
+}
+
+export default function WaterDispensersPage() {
+  return <ServicePageTemplate {...waterDispensersData} />
+}

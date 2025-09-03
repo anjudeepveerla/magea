@@ -1,0 +1,231 @@
+import { ServicePageTemplate } from "@/components/service-page-template"
+
+const fowData = {
+  serviceName: "FOW (Freezer on Wheels) Services",
+  serviceDescription:
+    "Specialized repair and maintenance services for mobile freezer units and cold storage on wheels. Professional solutions for commercial mobile refrigeration systems.",
+  heroImage: "/placeholder-y1xqm.png",
+  categories: [
+    {
+      title: "FOW Repairs & Servicing",
+      services: [
+        {
+          id: "complete-servicing",
+          name: "Complete Servicing",
+          description: "Comprehensive mobile freezer maintenance and system optimization",
+          image: "/mobile-freezer-maintenance.png",
+          issues: [
+            "Regular maintenance needed",
+            "Performance optimization",
+            "Mobile system check",
+            "Energy efficiency review",
+            "Preventive care",
+          ],
+        },
+        {
+          id: "demo",
+          name: "Demo",
+          description: "Professional setup and demonstration of new FOW units",
+          image: "/placeholder-ucy67.png",
+          issues: [
+            "New unit installation",
+            "Mobile system setup",
+            "Temperature calibration",
+            "Feature explanation",
+            "Operation training",
+          ],
+        },
+        {
+          id: "electrical-problem",
+          name: "Electrical Problem",
+          description: "Mobile electrical system repair and troubleshooting",
+          image: "/mobile-freezer-electrical-repair.png",
+          issues: [
+            "Power system failure",
+            "Battery issues",
+            "Electrical connections",
+            "Control panel problems",
+            "Wiring malfunction",
+          ],
+        },
+        {
+          id: "relay-problem",
+          name: "Relay Problem",
+          description: "Relay repair for mobile refrigeration control systems",
+          image: "/placeholder-1fx0e.png",
+          issues: [
+            "Relay malfunction",
+            "Starting problems",
+            "Intermittent operation",
+            "Control system issues",
+            "Component failure",
+          ],
+        },
+        {
+          id: "capacitors-problem",
+          name: "Capacitors Problem",
+          description: "Capacitor diagnosis and replacement for mobile units",
+          image: "/placeholder-xlzft.png",
+          issues: [
+            "Capacitor failure",
+            "Starting difficulties",
+            "Motor problems",
+            "Electrical efficiency loss",
+            "Component burnout",
+          ],
+        },
+        {
+          id: "thermostat-problem",
+          name: "Thermostat Problem",
+          description: "Mobile temperature control and thermostat repair",
+          image: "/placeholder-8v4c5.png",
+          issues: [
+            "Temperature control issues",
+            "Thermostat malfunction",
+            "Inaccurate readings",
+            "Auto-cycling problems",
+            "Temperature fluctuation",
+          ],
+        },
+        {
+          id: "gas-problem",
+          name: "Gas Problem",
+          description: "Mobile refrigerant system repair and gas refilling",
+          image: "/placeholder-7f699.png",
+          issues: [
+            "Insufficient cooling",
+            "Gas leakage",
+            "Pressure problems",
+            "Temperature inconsistency",
+            "High energy consumption",
+          ],
+        },
+        {
+          id: "compressor-problem",
+          name: "Compressor Problem",
+          description: "Mobile compressor repair and replacement services",
+          image: "/mobile-freezer-compressor-repair.png",
+          issues: [
+            "Compressor failure",
+            "Strange noises",
+            "Overheating issues",
+            "Frequent cycling",
+            "Poor cooling performance",
+          ],
+        },
+        {
+          id: "condenser-fan-motor",
+          name: "Condenser Fan Motor",
+          description: "Mobile fan motor repair for optimal heat dissipation",
+          image: "/mobile-freezer-fan-motor-repair.png",
+          issues: ["Fan not working", "Noisy operation", "Motor overheating", "Poor ventilation", "Reduced efficiency"],
+        },
+        {
+          id: "body-repair",
+          name: "Body Repair",
+          description: "Mobile unit body repair and restoration",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Dents and scratches", "Door problems", "Handle issues", "Rust and corrosion", "Physical damage"],
+        },
+        {
+          id: "accessories",
+          name: "Accessories",
+          description: "Mobile freezer accessories and component replacement",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Broken accessories", "Mobile components", "Door seals", "Internal fittings", "Mobility hardware"],
+        },
+        {
+          id: "condenser-fan-blade",
+          name: "Condenser Fan Blade Problem",
+          description: "Mobile fan blade repair and replacement",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Broken fan blades", "Bent blades", "Imbalanced rotation", "Noise issues", "Reduced airflow"],
+        },
+        {
+          id: "electronic-thermometer",
+          name: "Electronic Thermometer",
+          description: "Mobile temperature monitoring system repair",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Inaccurate readings",
+            "Display malfunction",
+            "Sensor problems",
+            "Calibration needed",
+            "Electronic failure",
+          ],
+        },
+        {
+          id: "fan-motor-base",
+          name: "Fan Motor Base Problem",
+          description: "Mobile motor mounting and base stabilization",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Loose motor mounting", "Vibration problems", "Base damage", "Alignment issues", "Mobile stability"],
+        },
+        {
+          id: "door-closing",
+          name: "Door Closing Problem",
+          description: "Mobile door mechanism and seal repair",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Door not closing", "Loose seals", "Hinge problems", "Latch issues", "Air leakage"],
+        },
+        {
+          id: "water-leakage",
+          name: "Water Leakage Problem",
+          description: "Mobile water leak detection and drainage repair",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Water accumulation",
+            "Drain blockage",
+            "Condensation issues",
+            "Pipe leakage",
+            "Mobile drainage problems",
+          ],
+        },
+        {
+          id: "electrical-wire",
+          name: "Electrical Wire Problem",
+          description: "Mobile wiring inspection and electrical safety",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: [
+            "Loose connections",
+            "Damaged wiring",
+            "Short circuit risks",
+            "Mobile power issues",
+            "Safety concerns",
+          ],
+        },
+        {
+          id: "door-hinges-clamp",
+          name: "Door Hinges & Clamp Problem",
+          description: "Mobile door hardware repair and adjustment",
+          image: "/placeholder.svg?height=300&width=400",
+          issues: ["Broken hinges", "Loose clamps", "Door alignment", "Hardware wear", "Mobile door stability"],
+        },
+      ],
+    },
+  ],
+  testimonials: [
+    {
+      name: "Ramesh Patel",
+      rating: 5,
+      comment: "Excellent service for our mobile ice cream cart. Quick and professional repair.",
+      service: "FOW Repair",
+    },
+    {
+      name: "Sanjay Kumar",
+      rating: 5,
+      comment: "Fixed the compressor issue perfectly. Mobile freezer working great now.",
+      service: "Compressor Problem",
+    },
+    {
+      name: "Neha Sharma",
+      rating: 5,
+      comment: "Professional service for our food truck freezer. Highly recommended!",
+      service: "Gas Problem",
+    },
+  ],
+}
+
+export default function FOWPage() {
+  return <ServicePageTemplate {...fowData} />
+}
