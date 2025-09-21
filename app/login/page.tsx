@@ -26,12 +26,12 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Link>
-        </div>
+        </div> */}
 
         <Card className="shadow-xl border-0">
           <CardHeader className="text-center pb-6">
@@ -82,10 +82,10 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center">
+                {/* <label className="flex items-center">
                   <input type="checkbox" className="mr-2" />
                   Remember me
-                </label>
+                </label> */}
                 <Link href="/forgot-password" className="text-blue-600 hover:text-blue-700">
                   Forgot password?
                 </Link>
