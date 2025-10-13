@@ -1,26 +1,28 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Calendar } from "@/components/ui/calendar"
-import { X, Check, Clock, CreditCard, CheckCircle } from "lucide-react"
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { X, Check, Clock, CreditCard, CheckCircle, LogIn, UserPlus } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface BookingModalProps {
-  isOpen: boolean
-  onClose: () => void
-  serviceName: string
-  preSelectedService?: string
+  isOpen: boolean;
+  onClose: () => void;
+  serviceName: string;
+  preSelectedService?: string;
 }
 
 interface ServiceData {
   [key: string]: {
-    name: string
-    subServices: { name: string }[]
-  }
+    name: string;
+    subServices: { name: string }[];
+  };
 }
 
 const serviceData: ServiceData = {
@@ -226,7 +228,7 @@ const serviceData: ServiceData = {
       { name: "Duct Problem" },
     ],
   },
-}
+};
 
 const allServices = [
   { id: "ac-services", name: "AC Services" },
@@ -239,7 +241,7 @@ const allServices = [
   { id: "water-dispenser", name: "Water Dispenser" },
   { id: "refrigerator-vans", name: "Freezers/Refrigerator Vans" },
   { id: "cold-rooms", name: "Cold Rooms" },
-]
+];
 
 const timeSlots = [
   "9:00 AM - 10:00 AM",
@@ -250,92 +252,76 @@ const timeSlots = [
   "3:00 PM - 4:00 PM",
   "4:00 PM - 5:00 PM",
   "5:00 PM - 6:00 PM",
-]
+];
 
 export default function BookingModal({ isOpen, onClose, serviceName, preSelectedService }: BookingModalProps) {
-  const [currentStep, setCurrentStep] = useState(1)
-  const [selectedService, setSelectedService] = useState(preSelectedService || "")
-  const [selectedSubService, setSelectedSubService] = useState("")
-  const [selectedDate, setSelectedDate] = useState<Date>()
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState("")
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedService, setSelectedService] = useState(preSelectedService || "");
+  const [selectedSubService, setSelectedSubService] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [bookingId, setBookingId] = useState("");
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { user, status } = useAuth();
+
   const [customerDetails, setCustomerDetails] = useState({
     name: "",
     phone: "",
     email: "",
     address: "",
     notes: "",
-  })
-  const [otpSent, setOtpSent] = useState(false)
-  const [otp, setOtp] = useState("")
-  const [paymentMethod, setPaymentMethod] = useState("")
-  const [bookingConfirmed, setBookingConfirmed] = useState(false)
-  const [bookingId, setBookingId] = useState("")
+  });
 
-  const handleNext = () => {
-    if (currentStep < 5) {
-      setCurrentStep(currentStep + 1)
+  useEffect(() => {
+    if (status === "authenticated" && user) {
+      setCustomerDetails((d) => ({
+        ...d,
+        name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email,
+        email: user.email,
+      }));
     }
-  }
+  }, [status, user]);
 
-  const handlePrevious = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
-    }
-  }
+  const nextUrl = useMemo(() => {
+    const qs = searchParams?.toString();
+    return `${pathname}${qs ? `?${qs}` : ""}`;
+  }, [pathname, searchParams]);
 
-  const handleServiceSelect = (serviceId: string) => {
-    setSelectedService(serviceId)
-    setSelectedSubService("")
-  }
-
-  const handleSubServiceSelect = (subService: string) => {
-    setSelectedSubService(subService)
-  }
-
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date)
-  }
-
-  const handleTimeSlotSelect = (timeSlot: string) => {
-    setSelectedTimeSlot(timeSlot)
-  }
-
-  const handleSendOTP = () => {
-    setOtpSent(true)
-  }
-
-  const handleVerifyOTP = () => {
-    if (otp === "123456") {
-      handleNext()
-    }
-  }
+  const handleNext = () => setCurrentStep((s) => Math.min(s + 1, 5));
+  const handlePrevious = () => setCurrentStep((s) => Math.max(s - 1, 1));
+  const handleServiceSelect = (id: string) => {
+    setSelectedService(id);
+    setSelectedSubService("");
+  };
+  const handleSubServiceSelect = (sub: string) => setSelectedSubService(sub);
+  const handleDateSelect = (date: Date | undefined) => setSelectedDate(date);
+  const handleTimeSlotSelect = (slot: string) => setSelectedTimeSlot(slot);
 
   const handlePayment = () => {
     // Generate booking ID
-    const id = "MAEGA" + Math.floor(Math.random() * 1000000)
-    setBookingId(id)
-    setBookingConfirmed(true)
-  }
+    const id = "MAEGA" + Math.floor(Math.random() * 1_000_000);
+    setBookingId(id);
+    setBookingConfirmed(true);
+  };
 
   const handleClose = () => {
-    // Reset all states
-    setCurrentStep(1)
-    setSelectedService(preSelectedService || "")
-    setSelectedSubService("")
-    setSelectedDate(undefined)
-    setSelectedTimeSlot("")
-    setCustomerDetails({ name: "", phone: "", email: "", address: "", notes: "" })
-    setOtpSent(false)
-    setOtp("")
-    setPaymentMethod("")
-    setBookingConfirmed(false)
-    setBookingId("")
-    onClose()
-  }
+    setCurrentStep(1);
+    setSelectedService(preSelectedService || "");
+    setSelectedSubService("");
+    setSelectedDate(undefined);
+    setSelectedTimeSlot("");
+    setCustomerDetails({ name: "", phone: "", email: "", address: "", notes: "" });
+    setPaymentMethod("");
+    setBookingConfirmed(false);
+    setBookingId("");
+    onClose();
+  };
 
-  const getSelectedServiceData = () => {
-    return serviceData[selectedService] || { name: selectedService, subServices: [] }
-  }
+  const getSelectedServiceData = () => serviceData[selectedService] || { name: selectedService, subServices: [] };
 
   if (bookingConfirmed) {
     return (
@@ -398,7 +384,7 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
           </div>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -413,6 +399,7 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
           </DialogTitle>
         </DialogHeader>
 
+        {/* Steps indicator */}
         <div className="flex items-center justify-between px-3 py-3 sm:px-6 sm:py-4 overflow-x-auto">
           <div className="flex items-center gap-1 sm:gap-2 min-w-max">
             {[1, 2, 3, 4, 5].map((step, index) => (
@@ -425,9 +412,7 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                   {step < currentStep ? <Check className="h-3 w-3 sm:h-4 sm:w-4" /> : step}
                 </div>
                 {index < 4 && (
-                  <div
-                    className={`w-6 sm:w-12 h-0.5 mx-1 sm:mx-2 ${step < currentStep ? "bg-blue-600" : "bg-gray-200"}`}
-                  />
+                  <div className={`w-6 sm:w-12 h-0.5 mx-1 sm:mx-2 ${step < currentStep ? "bg-blue-600" : "bg-gray-200"}`} />
                 )}
               </div>
             ))}
@@ -448,9 +433,7 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                   <button
                     key={service.id}
                     className={`p-3 sm:p-4 text-left border-2 rounded-lg transition-colors ${
-                      selectedService === service.id
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
+                      selectedService === service.id ? "border-blue-600 bg-blue-50" : "border-gray-200 hover:border-gray-300"
                     }`}
                     onClick={() => handleServiceSelect(service.id)}
                   >
@@ -486,17 +469,13 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                   <button
                     key={index}
                     className={`w-full p-3 text-left border rounded-lg transition-colors ${
-                      selectedSubService === subService.name
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300"
+                      selectedSubService === subService.name ? "border-blue-600 bg-blue-50" : "border-gray-200 hover:border-gray-300"
                     }`}
                     onClick={() => handleSubServiceSelect(subService.name)}
                   >
                     <div className="flex justify-between items-center gap-2">
                       <span className="font-medium text-sm sm:text-base flex-1 text-left">{subService.name}</span>
-                      {selectedSubService === subService.name && (
-                        <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                      )}
+                      {selectedSubService === subService.name && <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />}
                     </div>
                   </button>
                 ))}
@@ -529,7 +508,7 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                       mode="single"
                       selected={selectedDate}
                       onSelect={handleDateSelect}
-                      disabled={(date) => date < new Date()}
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                       className="rounded-lg border w-fit text-sm"
                     />
                   </div>
@@ -543,9 +522,7 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                         <button
                           key={slot}
                           className={`w-full p-3 text-left border rounded-lg transition-colors ${
-                            selectedTimeSlot === slot
-                              ? "border-blue-600 bg-blue-50"
-                              : "border-gray-200 hover:border-gray-300"
+                            selectedTimeSlot === slot ? "border-blue-600 bg-blue-50" : "border-gray-200 hover:border-gray-300"
                           }`}
                           onClick={() => handleTimeSlotSelect(slot)}
                         >
@@ -564,141 +541,125 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                 <Button variant="outline" onClick={handlePrevious} className="text-sm sm:text-base bg-transparent">
                   Previous
                 </Button>
-                <Button
-                  onClick={handleNext}
-                  disabled={!selectedDate || !selectedTimeSlot}
-                  className="text-sm sm:text-base"
-                >
+                <Button onClick={handleNext} disabled={!selectedDate || !selectedTimeSlot} className="text-sm sm:text-base">
                   Next
                 </Button>
               </div>
             </div>
           )}
 
-          {/* Step 4: Customer Details */}
+          {/* Step 4: Auth-aware Details Gate */}
           {currentStep === 4 && (
             <div className="space-y-4 sm:space-y-6">
-              <div className="text-center">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Customer Details</h3>
-                <p className="text-sm sm:text-base text-gray-600">Provide your contact information</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="name" className="text-sm sm:text-base">
-                      Full Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      placeholder="Enter your name"
-                      value={customerDetails.name}
-                      onChange={(e) => setCustomerDetails({ ...customerDetails, name: e.target.value })}
-                      className="text-sm sm:text-base"
-                    />
+              {status !== "authenticated" ? (
+                // Not logged in -> Prompt to sign in/up (no OTP, no details here)
+                <div className="space-y-6">
+                  <div className="text-center space-y-2">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">Sign in to Continue</h3>
+                    <p className="text-sm sm:text-base text-gray-600">
+                      Please log in or create an account to complete your booking.
+                    </p>
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="phone" className="text-sm sm:text-base">
-                      Phone Number *
-                    </Label>
-                    <Input
-                      id="phone"
-                      placeholder="+91 12345 67890"
-                      value={customerDetails.phone}
-                      onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
-                      className="text-sm sm:text-base"
-                    />
-                  </div>
-                </div>
 
-                <div className="space-y-1">
-                  <Label htmlFor="email" className="text-sm sm:text-base">
-                    Email Address *
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    value={customerDetails.email}
-                    onChange={(e) => setCustomerDetails({ ...customerDetails, email: e.target.value })}
-                    className="text-sm sm:text-base"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor="address" className="text-sm sm:text-base">
-                    Address *
-                  </Label>
-                  <Textarea
-                    id="address"
-                    placeholder="Enter your complete address"
-                    value={customerDetails.address}
-                    onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })}
-                    className="min-h-[80px] text-sm sm:text-base resize-none"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor="notes" className="text-sm sm:text-base">
-                    Additional Notes (Optional)
-                  </Label>
-                  <Textarea
-                    id="notes"
-                    placeholder="Any specific requirements"
-                    value={customerDetails.notes}
-                    onChange={(e) => setCustomerDetails({ ...customerDetails, notes: e.target.value })}
-                    className="min-h-[60px] text-sm sm:text-base resize-none"
-                  />
-                </div>
-
-                {!otpSent ? (
-                  <Button
-                    onClick={handleSendOTP}
-                    disabled={
-                      !customerDetails.name ||
-                      !customerDetails.phone ||
-                      !customerDetails.email ||
-                      !customerDetails.address
-                    }
-                    className="w-full text-sm sm:text-base"
-                  >
-                    Send OTP
-                  </Button>
-                ) : (
-                  <div className="space-y-3 bg-gray-50 p-3 sm:p-4 rounded-lg">
-                    <div className="space-y-2">
-                      <Label htmlFor="otp" className="text-sm sm:text-base">
-                        Enter OTP
-                      </Label>
-                      <Input
-                        id="otp"
-                        placeholder="Enter 6-digit OTP"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        maxLength={6}
-                        className="text-center font-mono text-sm sm:text-base"
-                      />
-                      <p className="text-xs sm:text-sm text-gray-600 break-words">
-                        OTP sent to {customerDetails.phone} and {customerDetails.email}
-                      </p>
-                      <p className="text-xs sm:text-sm text-blue-600 font-medium">Demo OTP: 123456</p>
-                    </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
                     <Button
-                      onClick={handleVerifyOTP}
-                      disabled={otp.length !== 6}
                       className="w-full text-sm sm:text-base"
+                      onClick={() => (window.location.href = `/login?next=${encodeURIComponent(nextUrl)}`)}
                     >
-                      Verify & Continue
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Login
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full text-sm sm:text-base bg-transparent"
+                      onClick={() => (window.location.href = `/signup?next=${encodeURIComponent(nextUrl)}`)}
+                    >
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Sign Up
                     </Button>
                   </div>
-                )}
-              </div>
 
-              <div className="flex justify-between pt-4 gap-3">
-                <Button variant="outline" onClick={handlePrevious} className="text-sm sm:text-base bg-transparent">
-                  Previous
-                </Button>
-              </div>
+                  <div className="rounded-lg border bg-blue-50 p-3 sm:p-4">
+                    <p className="text-xs sm:text-sm text-blue-900">
+                      You’ll be redirected back here to finish your booking after signing in.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between pt-2 gap-3">
+                    <Button variant="outline" onClick={handlePrevious} className="text-sm sm:text-base bg-transparent">
+                      Previous
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                // Logged in -> show details (read-only for name/email), no OTP
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">Your Details</h3>
+                    <p className="text-sm sm:text-base text-gray-600">We’ll use these to coordinate your service</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <Label htmlFor="name" className="text-sm sm:text-base">Full Name</Label>
+                        <Input id="name" value={customerDetails.name} readOnly className="text-sm sm:text-base bg-gray-50" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="email" className="text-sm sm:text-base">Email Address</Label>
+                        <Input id="email" value={customerDetails.email} readOnly className="text-sm sm:text-base bg-gray-50" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <Label htmlFor="phone" className="text-sm sm:text-base">Phone Number *</Label>
+                        <Input
+                          id="phone"
+                          placeholder="+91 12345 67890"
+                          value={customerDetails.phone}
+                          onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
+                          className="text-sm sm:text-base"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label htmlFor="address" className="text-sm sm:text-base">Address *</Label>
+                        <Textarea
+                          id="address"
+                          placeholder="Enter your complete address"
+                          value={customerDetails.address}
+                          onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })}
+                          className="min-h-[80px] text-sm sm:text-base resize-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <Label htmlFor="notes" className="text-sm sm:text-base">Additional Notes (Optional)</Label>
+                      <Textarea
+                        id="notes"
+                        placeholder="Any specific requirements"
+                        value={customerDetails.notes}
+                        onChange={(e) => setCustomerDetails({ ...customerDetails, notes: e.target.value })}
+                        className="min-h-[60px] text-sm sm:text-base resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between pt-4 gap-3">
+                    <Button variant="outline" onClick={handlePrevious} className="text-sm sm:text-base bg-transparent">
+                      Previous
+                    </Button>
+                    <Button
+                      onClick={handleNext}
+                      disabled={!customerDetails.phone || !customerDetails.address}
+                      className="text-sm sm:text-base"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -722,6 +683,14 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
                     <span className="font-medium text-right">{selectedSubService}</span>
                   </div>
                   <div className="flex justify-between items-start gap-2">
+                    <span className="text-gray-600 flex-shrink-0">Date:</span>
+                    <span className="font-medium text-right">{selectedDate?.toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-gray-600 flex-shrink-0">Time:</span>
+                    <span className="font-medium text-right">{selectedTimeSlot}</span>
+                  </div>
+                  <div className="flex justify-between items-start gap-2">
                     <span className="text-gray-600 flex-shrink-0">Service Charge:</span>
                     <span className="font-medium text-right">To be discussed on-site</span>
                   </div>
@@ -731,18 +700,11 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
               <div className="space-y-3">
                 <Label className="font-medium text-sm sm:text-base">Payment Method</Label>
                 <div className="space-y-2">
-                  {[
-                    { method: "UPI" },
-                    { method: "Credit/Debit Card" },
-                    { method: "Net Banking" },
-                    { method: "Wallet" },
-                  ].map(({ method }) => (
+                  {["UPI", "Credit/Debit Card", "Net Banking", "Wallet"].map((method) => (
                     <button
                       key={method}
                       className={`w-full p-3 text-left border rounded-lg transition-colors ${
-                        paymentMethod === method
-                          ? "border-blue-600 bg-blue-50"
-                          : "border-gray-200 hover:border-gray-300"
+                        paymentMethod === method ? "border-blue-600 bg-blue-50" : "border-gray-200 hover:border-gray-300"
                       }`}
                       onClick={() => setPaymentMethod(method)}
                     >
@@ -768,5 +730,5 @@ export default function BookingModal({ isOpen, onClose, serviceName, preSelected
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
