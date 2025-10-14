@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -16,13 +16,12 @@ export default function Navigation() {
   const { isAuthenticated, user, logout } = useAuth()
   const { isTechAuthenticated, logoutTechnician } = useTechnician()
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
+  const toggleMobileMenu = () => setIsMobileMenuOpen((p) => !p);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        {/* Logo */}
         <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hzPhiTcquwE6NDH7GuUV1CBffal9ao.png"
@@ -30,6 +29,8 @@ export default function Navigation() {
             className="h-11 md:h-12 w-auto"
           />
         </Link>
+
+        {/* Desktop navigation */}
         <nav className="hidden lg:flex items-center space-x-6">
           <Link href="/" className="text-foreground hover:text-blue-600 transition-colors font-medium">
             Home
@@ -91,6 +92,7 @@ export default function Navigation() {
           )}
         </nav>
 
+        {/* Mobile section */}
         <div className="lg:hidden flex items-center space-x-2">
           {isTechAuthenticated ? (
             <Button
@@ -129,21 +131,31 @@ export default function Navigation() {
           >
             <div className="relative w-6 h-6 flex items-center justify-center">
               <div
-                className={`absolute transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "rotate-45" : "rotate-0"}`}
+                className={`absolute transition-all duration-300 ease-in-out ${
+                  isMobileMenuOpen ? "rotate-45" : "rotate-0"
+                }`}
               >
                 <div
-                  className={`w-6 h-0.5 bg-blue-600 transition-all duration-300 ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
+                  className={`w-6 h-0.5 bg-blue-600 transition-all duration-300 ${
+                    isMobileMenuOpen ? "opacity-100" : "opacity-0"
+                  }`}
                 ></div>
               </div>
               <div
-                className={`absolute transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "-rotate-45" : "rotate-0"}`}
+                className={`absolute transition-all duration-300 ease-in-out ${
+                  isMobileMenuOpen ? "-rotate-45" : "rotate-0"
+                }`}
               >
                 <div
-                  className={`w-6 h-0.5 bg-blue-600 transition-all duration-300 ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
+                  className={`w-6 h-0.5 bg-blue-600 transition-all duration-300 ${
+                    isMobileMenuOpen ? "opacity-100" : "opacity-0"
+                  }`}
                 ></div>
               </div>
               <div
-                className={`absolute transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"}`}
+                className={`absolute transition-all duration-300 ease-in-out ${
+                  isMobileMenuOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"
+                }`}
               >
                 <div className="flex flex-col space-y-1">
                   <div className="w-6 h-0.5 bg-blue-600"></div>
@@ -156,6 +168,7 @@ export default function Navigation() {
         </div>
       </div>
 
+      {/* Mobile dropdown menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-b border-gray-200 shadow-xl animate-in slide-in-from-top-4 duration-300 ease-out">
           <nav className="container mx-auto px-4 py-6">
@@ -228,5 +241,5 @@ export default function Navigation() {
         </div>
       )}
     </header>
-  )
+  );
 }

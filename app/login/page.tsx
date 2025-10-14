@@ -101,6 +101,7 @@ export default function LoginPage() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
                   className="h-12"
+                  autoComplete="email"
                 />
               </div>
 
@@ -115,11 +116,13 @@ export default function LoginPage() {
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
                     className="h-12 pr-12"
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword((s) => !s)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -127,10 +130,6 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" />
-                  Remember me
-                </label>
                 <Link href="/forgot-password" className="text-blue-600 hover:text-blue-700">
                   Forgot password?
                 </Link>
@@ -143,7 +142,7 @@ export default function LoginPage() {
 
             <div className="mt-6 text-center">
               <p className="text-gray-600">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
                   Sign up
                 </Link>
@@ -153,5 +152,5 @@ export default function LoginPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

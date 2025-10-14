@@ -7,12 +7,107 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Upload, ArrowRight, Users, Shield, Star } from "lucide-react"
+import { Upload, ArrowRight, Users, Shield, Star, Mail, CheckCircle, X } from "lucide-react"
 import Link from "next/link"
+import { useState, useRef } from "react"
 
 export default function JoinPage() {
+  const [formData, setFormData] = useState({})
+  const [selectedAppliances, setSelectedAppliances] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('')
+  const [files, setFiles] = useState({})
+  const formRef = useRef(null)
+
   const scrollToForm = () => {
     document.getElementById("registration-form")?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleApplianceChange = (appliance, checked) => {
+    if (checked) {
+      setSelectedAppliances(prev => [...prev, appliance])
+    } else {
+      setSelectedAppliances(prev => prev.filter(item => item !== appliance))
+    }
+  }
+
+  const handleFileChange = (field, event) => {
+    const file = event.target.files[0]
+    if (file) {
+      setFiles(prev => ({
+        ...prev,
+        [field]: file
+      }))
+    }
+  }
+
+  const removeFile = (field) => {
+    setFiles(prev => {
+      const newFiles = { ...prev }
+      delete newFiles[field]
+      return newFiles
+    })
+    
+    // Reset the file input
+    const input = document.getElementById(field)
+    if (input) input.value = ''
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('')
+
+    try {
+      // Create FormData object for file upload
+      const formDataToSend = new FormData()
+      
+      // Append form fields
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSend.append(key, value || '')
+      })
+      
+      // Append appliances
+      formDataToSend.append('appliances', selectedAppliances.join(', '))
+      
+      // Append files
+      Object.entries(files).forEach(([key, file]) => {
+        formDataToSend.append(key, file)
+      })
+
+      // Submit to Next.js API route
+      const response = await fetch('/api/submit-join-application', {
+        method: 'POST',
+        body: formDataToSend,
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setSubmitStatus('success')
+        // Reset form
+        setFormData({})
+        setSelectedAppliances([])
+        setFiles({})
+        if (formRef.current) {
+          formRef.current.reset()
+        }
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Submit error:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -36,106 +131,168 @@ export default function JoinPage() {
             </div>
           </div>
 
+          {/* Success/Error Messages */}
+          {submitStatus === 'success' && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-3">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <div>
+                <p className="text-green-800 font-medium">Application Submitted Successfully!</p>
+                <p className="text-green-600 text-sm">We'll review your application and get back to you soon.</p>
+              </div>
+            </div>
+          )}
+
+          {submitStatus === 'error' && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800 font-medium">Error submitting application</p>
+              <p className="text-red-600 text-sm">Please check your internet connection and try again.</p>
+            </div>
+          )}
+
           <Card className="border-0 shadow-xl">
             <CardContent className="p-6 md:p-8">
-              <form className="space-y-10">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-10">
+                {/* Section 1: Personal Details */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 1: Personal Details
                   </h3>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="id-number" className="text-sm font-medium">
                         Identity Card Number *
                       </Label>
-                      <Input id="id-number" placeholder="Enter ID card number" className="h-11" />
+                      <Input 
+                        id="id-number" 
+                        placeholder="Enter ID card number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('idNumber', e.target.value)}
+                        required
+                      />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="photo" className="text-sm font-medium">
-                        Upload Photo *
-                      </Label>
-                      <div className="flex items-center justify-center p-4 border-2 border-dashed border-border rounded-lg hover:border-primary transition-colors cursor-pointer bg-muted/30">
-                        <div className="text-center">
-                          <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
-                          <span className="text-sm text-muted-foreground">Click to upload photo</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="full-name" className="text-sm font-medium">
                         Name *
                       </Label>
-                      <Input id="full-name" placeholder="Enter your full name" className="h-11" />
+                      <Input 
+                        id="full-name" 
+                        placeholder="Enter your full name" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('fullName', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="dob" className="text-sm font-medium">
                         Date of Birth *
                       </Label>
-                      <Input id="dob" type="date" className="h-11" />
+                      <Input 
+                        id="dob" 
+                        type="date" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('dob', e.target.value)}
+                        required
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="aadhaar" className="text-sm font-medium">
                         Aadhar Number *
                       </Label>
-                      <Input id="aadhaar" placeholder="Enter Aadhar number" className="h-11" />
+                      <Input 
+                        id="aadhaar" 
+                        placeholder="Enter Aadhar number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('aadhaar', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="mobile1" className="text-sm font-medium">
                         Mobile No.1 *
                       </Label>
-                      <Input id="mobile1" type="tel" placeholder="Enter primary mobile number" className="h-11" />
+                      <Input 
+                        id="mobile1" 
+                        type="tel" 
+                        placeholder="Enter primary mobile number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('mobile1', e.target.value)}
+                        required
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="mobile2" className="text-sm font-medium">
                         Mobile No.2
                       </Label>
-                      <Input id="mobile2" type="tel" placeholder="Enter secondary mobile number" className="h-11" />
+                      <Input 
+                        id="mobile2" 
+                        type="tel" 
+                        placeholder="Enter secondary mobile number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('mobile2', e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="pan" className="text-sm font-medium">
                         PAN Card Number *
                       </Label>
-                      <Input id="pan" placeholder="Enter PAN number" className="h-11" />
+                      <Input 
+                        id="pan" 
+                        placeholder="Enter PAN number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('pan', e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
                 </div>
 
+                {/* Section 2: Bank Details */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 2: Bank Details
                   </h3>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="bank-name" className="text-sm font-medium">
                         Bank Name *
                       </Label>
-                      <Input id="bank-name" placeholder="Enter bank name" className="h-11" />
+                      <Input 
+                        id="bank-name" 
+                        placeholder="Enter bank name" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('bankName', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="branch" className="text-sm font-medium">
                         Branch *
                       </Label>
-                      <Input id="branch" placeholder="Enter branch name" className="h-11" />
+                      <Input 
+                        id="branch" 
+                        placeholder="Enter branch name" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('branch', e.target.value)}
+                        required
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="ifsc" className="text-sm font-medium">
                         IFSC Code *
                       </Label>
-                      <Input id="ifsc" placeholder="Enter IFSC code" className="h-11" />
+                      <Input 
+                        id="ifsc" 
+                        placeholder="Enter IFSC code" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('ifsc', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="account-type" className="text-sm font-medium">
                         Account Type *
                       </Label>
-                      <Select>
+                      <Select onValueChange={(value) => handleInputChange('accountType', value)} required>
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select account type" />
                         </SelectTrigger>
@@ -145,77 +302,131 @@ export default function JoinPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="account-number" className="text-sm font-medium">
                         Account Number *
                       </Label>
-                      <Input id="account-number" type="number" placeholder="Enter account number" className="h-11" />
+                      <Input 
+                        id="account-number" 
+                        type="number" 
+                        placeholder="Enter account number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('accountNumber', e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
                 </div>
 
+                {/* Section 3: Shop Details */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 3: Shop Details
                   </h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="shop-name" className="text-sm font-medium">
-                      Shop Name *
-                    </Label>
-                    <Input id="shop-name" placeholder="Enter shop name" className="h-11" />
-                  </div>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="shop-door" className="text-sm font-medium">
-                        Door Number *
+                      <Label htmlFor="shop-name" className="text-sm font-medium">
+                        Shop Name *
                       </Label>
-                      <Input id="shop-door" placeholder="Enter door number" className="h-11" />
+                      <Input 
+                        id="shop-name" 
+                        placeholder="Enter shop name" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('shopName', e.target.value)}
+                        required
+                      />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="shop-street" className="text-sm font-medium">
-                        Street *
-                      </Label>
-                      <Input id="shop-street" placeholder="Enter street name" className="h-11" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="shop-door" className="text-sm font-medium">
+                          Door Number *
+                        </Label>
+                        <Input 
+                          id="shop-door" 
+                          placeholder="Enter door number" 
+                          className="h-11"
+                          onChange={(e) => handleInputChange('shopDoor', e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="shop-street" className="text-sm font-medium">
+                          Street *
+                        </Label>
+                        <Input 
+                          id="shop-street" 
+                          placeholder="Enter street name" 
+                          className="h-11"
+                          onChange={(e) => handleInputChange('shopStreet', e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="shop-area" className="text-sm font-medium">
+                          Village/Area *
+                        </Label>
+                        <Input 
+                          id="shop-area" 
+                          placeholder="Enter village or area name" 
+                          className="h-11"
+                          onChange={(e) => handleInputChange('shopArea', e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="shop-location" className="text-sm font-medium">
+                          Town/Mandal, District, State *
+                        </Label>
+                        <Input 
+                          id="shop-location" 
+                          placeholder="Enter town/mandal, district, state" 
+                          className="h-11"
+                          onChange={(e) => handleInputChange('shopLocation', e.target.value)}
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="shop-area" className="text-sm font-medium">
-                        Village/Area *
-                      </Label>
-                      <Input id="shop-area" placeholder="Enter village or area name" className="h-11" />
+                    <div className="grid grid-cols-1 md:grid-cols-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="shop-pin" className="text-sm font-medium">
+                          PIN Code *
+                        </Label>
+                        <Input 
+                          id="shop-pin" 
+                          type="number" 
+                          placeholder="Enter PIN code" 
+                          className="h-11"
+                          onChange={(e) => handleInputChange('shopPin', e.target.value)}
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="shop-location" className="text-sm font-medium">
-                        Town/Mandal, District, State *
-                      </Label>
-                      <Input id="shop-location" placeholder="Enter town/mandal, district, state" className="h-11" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="shop-pin" className="text-sm font-medium">
-                      PIN Code *
-                    </Label>
-                    <Input id="shop-pin" type="number" placeholder="Enter PIN code" className="h-11 max-w-xs" />
                   </div>
                 </div>
 
+                {/* Section 4: House Details */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 4: House Details
                   </h3>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="father-name" className="text-sm font-medium">
                         Father Name & Contact Number *
                       </Label>
-                      <Input id="father-name" placeholder="Enter father's name and contact" className="h-11" />
+                      <Input 
+                        id="father-name" 
+                        placeholder="Enter father's name and contact" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('fatherName', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="marital-status" className="text-sm font-medium">
                         Marital Status *
                       </Label>
-                      <Select>
+                      <Select onValueChange={(value) => handleInputChange('maritalStatus', value)} required>
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select marital status" />
                         </SelectTrigger>
@@ -226,78 +437,122 @@ export default function JoinPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="spouse-name" className="text-sm font-medium">
                         Name of the Spouse
                       </Label>
-                      <Input id="spouse-name" placeholder="Enter spouse name (if married)" className="h-11" />
+                      <Input 
+                        id="spouse-name" 
+                        placeholder="Enter spouse name (if married)" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('spouseName', e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="spouse-mobile" className="text-sm font-medium">
                         Spouse Mobile Number
                       </Label>
-                      <Input id="spouse-mobile" type="tel" placeholder="Enter spouse mobile number" className="h-11" />
+                      <Input 
+                        id="spouse-mobile" 
+                        type="tel" 
+                        placeholder="Enter spouse mobile number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('spouseMobile', e.target.value)}
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="house-door" className="text-sm font-medium">
                         Door Number *
                       </Label>
-                      <Input id="house-door" placeholder="Enter door number" className="h-11" />
+                      <Input 
+                        id="house-door" 
+                        placeholder="Enter door number" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('houseDoor', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="house-street" className="text-sm font-medium">
                         Street *
                       </Label>
-                      <Input id="house-street" placeholder="Enter street name" className="h-11" />
+                      <Input 
+                        id="house-street" 
+                        placeholder="Enter street name" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('houseStreet', e.target.value)}
+                        required
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="house-area" className="text-sm font-medium">
                         Village/Area *
                       </Label>
-                      <Input id="house-area" placeholder="Enter village or area name" className="h-11" />
+                      <Input 
+                        id="house-area" 
+                        placeholder="Enter village or area name" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('houseArea', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="house-location" className="text-sm font-medium">
                         Town/Mandal, District, State *
                       </Label>
-                      <Input id="house-location" placeholder="Enter town/mandal, district, state" className="h-11" />
+                      <Input 
+                        id="house-location" 
+                        placeholder="Enter town/mandal, district, state" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('houseLocation', e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="house-pin" className="text-sm font-medium">
-                      PIN Code *
-                    </Label>
-                    <Input id="house-pin" type="number" placeholder="Enter PIN code" className="h-11 max-w-xs" />
+                  <div className="grid grid-cols-1 md:grid-cols-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="house-pin" className="text-sm font-medium">
+                        PIN Code *
+                      </Label>
+                      <Input 
+                        id="house-pin" 
+                        type="number" 
+                        placeholder="Enter PIN code" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('housePin', e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
 
+                {/* Section 5: Additional Details */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 5: Additional Details
                   </h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="technicians-count" className="text-sm font-medium">
-                      Number of Technicians Available *
-                    </Label>
-                    <Input
-                      id="technicians-count"
-                      type="number"
-                      placeholder="Enter number of technicians"
-                      className="h-11 max-w-xs"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="technicians-count" className="text-sm font-medium">
+                        Number of Technicians Available *
+                      </Label>
+                      <Input
+                        id="technicians-count"
+                        type="number"
+                        placeholder="Enter number of technicians"
+                        className="h-11"
+                        onChange={(e) => handleInputChange('techniciansCount', e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
+                  
                   <div className="space-y-4">
                     <Label className="text-sm font-medium">Appliances Can Handle *</Label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 border border-border rounded-lg bg-muted/30">
                       {[
                         "AC",
-                        "Refrigerator",
+                        "Refrigerator", 
                         "WC (Water Cooler)",
                         "BC (Bottle Cooler)",
                         "WD (Water Dispenser)",
@@ -307,7 +562,10 @@ export default function JoinPage() {
                         "FOW",
                       ].map((appliance) => (
                         <div key={appliance} className="flex items-center space-x-3">
-                          <Checkbox id={appliance.toLowerCase().replace(/[^a-z0-9]/g, "-")} />
+                          <Checkbox 
+                            id={appliance.toLowerCase().replace(/[^a-z0-9]/g, "-")}
+                            onCheckedChange={(checked) => handleApplianceChange(appliance, checked)}
+                          />
                           <Label
                             htmlFor={appliance.toLowerCase().replace(/[^a-z0-9]/g, "-")}
                             className="text-sm font-medium"
@@ -320,16 +578,17 @@ export default function JoinPage() {
                   </div>
                 </div>
 
+                {/* Section 6: Qualifications */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 6: Qualifications
                   </h3>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="academic-qualification" className="text-sm font-medium">
                         Academic Qualification *
                       </Label>
-                      <Select>
+                      <Select onValueChange={(value) => handleInputChange('academicQualification', value)} required>
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select academic qualification" />
                         </SelectTrigger>
@@ -347,7 +606,7 @@ export default function JoinPage() {
                       <Label htmlFor="technical-qualification" className="text-sm font-medium">
                         Technical Qualification *
                       </Label>
-                      <Select>
+                      <Select onValueChange={(value) => handleInputChange('technicalQualification', value)} required>
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select technical qualification" />
                         </SelectTrigger>
@@ -363,16 +622,17 @@ export default function JoinPage() {
                   </div>
                 </div>
 
+                {/* Section 7: Emergency & Other Details */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Section 7: Emergency & Other Details
                   </h3>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="blood-group" className="text-sm font-medium">
                         Blood Group *
                       </Label>
-                      <Select>
+                      <Select onValueChange={(value) => handleInputChange('bloodGroup', value)} required>
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select blood group" />
                         </SelectTrigger>
@@ -392,10 +652,13 @@ export default function JoinPage() {
                       <Label htmlFor="old-id" className="text-sm font-medium">
                         Old ID Number
                       </Label>
-                      <Input id="old-id" placeholder="Enter old ID number (if rejoining)" className="h-11" />
+                      <Input 
+                        id="old-id" 
+                        placeholder="Enter old ID number (if rejoining)" 
+                        className="h-11"
+                        onChange={(e) => handleInputChange('oldId', e.target.value)}
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="emergency-contact" className="text-sm font-medium">
                         Emergency Contact Number *
@@ -405,6 +668,8 @@ export default function JoinPage() {
                         type="tel"
                         placeholder="Enter emergency contact number"
                         className="h-11"
+                        onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
+                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -415,6 +680,8 @@ export default function JoinPage() {
                         id="emergency-relation"
                         placeholder="Enter relation (e.g., Father, Brother)"
                         className="h-11"
+                        onChange={(e) => handleInputChange('emergencyRelation', e.target.value)}
+                        required
                       />
                     </div>
                   </div>
@@ -427,31 +694,92 @@ export default function JoinPage() {
                       placeholder="Describe your work experience in detail"
                       rows={4}
                       className="resize-none"
+                      onChange={(e) => handleInputChange('experience', e.target.value)}
+                      required
                     />
                   </div>
                 </div>
 
+                {/* File Upload Section */}
                 <div className="space-y-6">
                   <h3 className="font-heading font-semibold text-xl text-foreground border-b border-border pb-3">
                     Document Uploads
                   </h3>
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Upload ID Proof *</Label>
-                      <div className="flex items-center justify-center p-4 border-2 border-dashed border-border rounded-lg hover:border-primary transition-colors cursor-pointer bg-muted/30">
-                        <div className="text-center">
-                          <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
-                          <span className="text-sm text-muted-foreground">Click to upload ID proof</span>
-                        </div>
+                      <Label className="text-sm font-medium">Upload Photo *</Label>
+                      <div className="relative">
+                        <Input
+                          id="photo"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleFileChange('photo', e)}
+                          className="h-11"
+                        />
+                        {files.photo && (
+                          <div className="mt-2 flex items-center justify-between p-2 bg-muted rounded">
+                            <span className="text-sm">{files.photo.name}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFile('photo')}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-2">
+                      <Label className="text-sm font-medium">Upload ID Proof *</Label>
+                      <div className="relative">
+                        <Input
+                          id="idProof"
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          onChange={(e) => handleFileChange('idProof', e)}
+                          className="h-11"
+                        />
+                        {files.idProof && (
+                          <div className="mt-2 flex items-center justify-between p-2 bg-muted rounded">
+                            <span className="text-sm">{files.idProof.name}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFile('idProof')}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
                       <Label className="text-sm font-medium">Upload Certificates</Label>
-                      <div className="flex items-center justify-center p-4 border-2 border-dashed border-border rounded-lg hover:border-primary transition-colors cursor-pointer bg-muted/30">
-                        <div className="text-center">
-                          <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
-                          <span className="text-sm text-muted-foreground">Click to upload certificates</span>
-                        </div>
+                      <div className="relative">
+                        <Input
+                          id="certificates"
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          multiple
+                          onChange={(e) => handleFileChange('certificates', e)}
+                          className="h-11"
+                        />
+                        {files.certificates && (
+                          <div className="mt-2 flex items-center justify-between p-2 bg-muted rounded">
+                            <span className="text-sm">{files.certificates.name}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFile('certificates')}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -459,9 +787,23 @@ export default function JoinPage() {
 
                 {/* Submit Button */}
                 <div className="text-center pt-8">
-                  <Button size="lg" className="text-lg px-12 py-4 h-auto">
-                    Submit Application
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="text-lg px-12 py-4 h-auto"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Mail className="mr-2 h-5 w-5 animate-spin" />
+                        Submitting Application...
+                      </>
+                    ) : (
+                      <>
+                        Submit Application
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>
@@ -526,11 +868,6 @@ export default function JoinPage() {
                 <li>
                   <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pricing" className="hover:opacity-100 transition-opacity">
-                    Pricing
                   </Link>
                 </li>
                 <li>
