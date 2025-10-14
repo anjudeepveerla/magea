@@ -363,7 +363,7 @@ export default function ServiceSelection({ serviceId, onSubmit, onBack, isLoadin
         <CardContent className="text-center py-8">
           <p className="text-muted-foreground">Service not found</p>
           <Button onClick={onBack} className="mt-4">
-            Back to Services
+            Back
           </Button>
         </CardContent>
       </Card>

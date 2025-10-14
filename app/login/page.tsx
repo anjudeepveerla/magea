@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = "force-dynamic"
 
 import type React from "react"
 
@@ -9,18 +10,42 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { useRouter } from "next/navigation"
+import { useTechnician } from "@/contexts/technician-context"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [role, setRole] = useState<"customer" | "partner">("customer")
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
+  const { login } = useAuth()
+  const { loginTechnician } = useTechnician()
+  const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log("Login attempt:", formData)
+    if (role === "customer") {
+      // Demo credentials: customer@maega.app / maega123
+      if (
+        (formData.email === "customer@maega.app" && formData.password === "maega123") ||
+        (formData.email === "demo@maega.app" && formData.password === "maega123")
+      ) {
+        login({ name: "Maega Customer", email: formData.email })
+        router.push("/")
+        return
+      }
+      alert("Invalid credentials. Use customer@maega.app / maega123")
+    } else {
+      const ok = loginTechnician(formData.email, formData.password)
+      if (ok) {
+        router.push("/technician-dashboard")
+        return
+      }
+      alert("Invalid partner credentials. Use tech@maega.com / demo123")
+    }
   }
 
   return (
@@ -42,6 +67,26 @@ export default function LoginPage() {
             </div>
             <CardTitle className="text-2xl font-bold text-gray-900">Welcome Back</CardTitle>
             <CardDescription className="text-gray-600">Sign in to your MAEGA account</CardDescription>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setRole("customer")}
+                className={`py-2 rounded-md border text-sm font-medium transition-colors ${
+                  role === "customer" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700 border-gray-300"
+                }`}
+              >
+                Customer Login
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole("partner")}
+                className={`py-2 rounded-md border text-sm font-medium transition-colors ${
+                  role === "partner" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700 border-gray-300"
+                }`}
+              >
+                Partner Login
+              </button>
+            </div>
           </CardHeader>
 
           <CardContent>

@@ -305,22 +305,22 @@ export default function ContactPage() {
               <h4 className="font-heading font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-sm opacity-80">
                 <li>
-                  <Link href="/services/ac-services" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     AC Services
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/refrigerators" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Refrigerators
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/deep-freezers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Deep Freezers
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/water-coolers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Water Coolers
                   </Link>
                 </li>

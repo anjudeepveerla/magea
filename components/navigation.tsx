@@ -1,11 +1,20 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useState } from "react"
+import { useCart } from "@/contexts/cart-context"
+import { useAuth } from "@/contexts/auth-context"
+import { useTechnician } from "@/contexts/technician-context"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { cart } = useCart()
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+  const { isAuthenticated, user, logout } = useAuth()
+  const { isTechAuthenticated, logoutTechnician } = useTechnician()
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -22,6 +31,9 @@ export default function Navigation() {
           />
         </Link>
         <nav className="hidden lg:flex items-center space-x-6">
+          <Link href="/" className="text-foreground hover:text-blue-600 transition-colors font-medium">
+            Home
+          </Link>
           <Link href="/services" className="text-foreground hover:text-blue-600 transition-colors font-medium">
             Services
           </Link>
@@ -31,26 +43,83 @@ export default function Navigation() {
           <Link href="/portfolio" className="text-foreground hover:text-blue-600 transition-colors font-medium">
             Portfolio
           </Link>
+          {!isTechAuthenticated && (
+            <Link href="/join" className="text-foreground hover:text-blue-600 transition-colors font-medium">
+              Partner With Maega
+            </Link>
+          )}
           <Link href="/contact" className="text-foreground hover:text-blue-600 transition-colors font-medium">
             Contact
           </Link>
-          <Link href="/join" className="text-foreground hover:text-blue-600 transition-colors font-medium">
-            Join Now
-          </Link>
-          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
+          {!isTechAuthenticated && (
+            <Link href="/cart" className="relative text-foreground hover:text-blue-600 transition-colors font-medium">
+              <span className="inline-flex items-center">Cart</span>
+              {cartItemCount > 0 && (
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  {cartItemCount}
+                </Badge>
+              )}
+            </Link>
+          )}
+          {isTechAuthenticated ? (
+            <Button size="sm" variant="outline" className="border-blue-600 text-blue-600" asChild>
+              <Link href="/technician-dashboard">My Dashboard</Link>
+            </Button>
+          ) : !isAuthenticated ? (
+            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="outline" className="border-blue-600 text-blue-600">
+                  My Account
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard">My Bookings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={logout} variant="destructive">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </nav>
 
         <div className="lg:hidden flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-            asChild
-          >
-            <Link href="/login">Login</Link>
-          </Button>
+          {isTechAuthenticated ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-blue-600 text-blue-600"
+              asChild
+            >
+              <Link href="/technician-dashboard">My Dashboard</Link>
+            </Button>
+          ) : !isAuthenticated ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+              asChild
+            >
+              <Link href="/login">Login</Link>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-blue-600 text-blue-600"
+              asChild
+            >
+              <Link href="/dashboard">My Account</Link>
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -92,6 +161,13 @@ export default function Navigation() {
           <nav className="container mx-auto px-4 py-6">
             <div className="flex flex-col space-y-1">
               <Link
+                href="/"
+                className="text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
                 href="/services"
                 className="text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -124,8 +200,29 @@ export default function Navigation() {
                 className="text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Join Now
+                Partner With Maega
               </Link>
+              <Link
+                href="/cart"
+                className="relative text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Cart
+                {cartItemCount > 0 && (
+                  <Badge className="absolute top-2 right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {cartItemCount}
+                  </Badge>
+                )}
+              </Link>
+              {isAuthenticated ? (
+                <Link
+                  href="/dashboard"
+                  className="text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  My Account
+                </Link>
+              ) : null}
             </div>
           </nav>
         </div>

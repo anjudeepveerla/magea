@@ -273,7 +273,7 @@ export default function PortfolioPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-lg px-8" asChild>
-                <Link href="/services">Book a Service</Link>
+                <Link href="/contact">Book a Service</Link>
               </Button>
               <Button
                 size="lg"

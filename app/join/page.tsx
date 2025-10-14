@@ -17,77 +17,7 @@ export default function JoinPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-background to-card py-20 lg:py-32 pt-32">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <h1 className="font-heading font-bold text-4xl lg:text-6xl text-foreground leading-tight">
-                  Join the MAEGA Network – Empower Your Skills, Expand Your Reach
-                </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Become a certified partner/technician and grow with us. Join thousands of professionals who are
-                  building successful careers with MAEGA's trusted platform.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="text-lg px-8" onClick={scrollToForm}>
-                  Join Now
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent" asChild>
-                  <Link href="/contact">Learn More</Link>
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-3 gap-6 pt-4">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Users className="h-6 w-6 text-primary" />
-                  </div>
-                  <p className="text-sm font-medium text-foreground">5000+</p>
-                  <p className="text-xs text-muted-foreground">Active Technicians</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Shield className="h-6 w-6 text-accent" />
-                  </div>
-                  <p className="text-sm font-medium text-foreground">100%</p>
-                  <p className="text-xs text-muted-foreground">Verified Partners</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Star className="h-6 w-6 text-secondary" />
-                  </div>
-                  <p className="text-sm font-medium text-foreground">4.9/5</p>
-                  <p className="text-xs text-muted-foreground">Partner Rating</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <img
-                src="/professional-technician-hero.png"
-                alt="Professional technician with toolkit"
-                className="rounded-2xl shadow-2xl w-full h-auto"
-              />
-              <div className="absolute -bottom-6 -left-6 bg-background p-4 rounded-xl shadow-lg border border-border">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                    <Shield className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">Verified Partner</p>
-                    <p className="text-sm text-muted-foreground">Trusted & Certified</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero section removed per request */}
 
       {/* Registration Form Section */}
       <section id="registration-form" className="py-20 bg-card">
@@ -99,6 +29,11 @@ export default function JoinPage() {
             <p className="text-lg text-muted-foreground">
               Please fill all details carefully. All fields marked with * are required.
             </p>
+            <div className="pt-2">
+              <Button asChild>
+                <a href="/partner-login">Already a Partner? Login</a>
+              </Button>
+            </div>
           </div>
 
           <Card className="border-0 shadow-xl">
@@ -558,22 +493,22 @@ export default function JoinPage() {
               <h4 className="font-heading font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-sm opacity-80">
                 <li>
-                  <Link href="/services/ac-services" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     AC Services
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/refrigerators" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Refrigerators
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/deep-freezers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Deep Freezers
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/water-coolers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Water Coolers
                   </Link>
                 </li>

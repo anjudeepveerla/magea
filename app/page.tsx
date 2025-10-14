@@ -11,70 +11,70 @@ const services = [
     title: "AC Services",
     description: "Complete AC repair, installation & maintenance",
     image: "/air-conditioner-repair.png",
-    href: "/services/ac-services",
+    href: "/contact",
   },
   {
     id: "refrigerators",
     title: "Refrigerators",
     description: "Expert refrigerator repair & servicing",
     image: "/refrigerator-repair.png",
-    href: "/services/refrigerators",
+    href: "/contact",
   },
   {
     id: "deep-freezers",
     title: "Deep Freezers",
     description: "Professional deep freezer maintenance",
     image: "/deep-freezer-repair.png",
-    href: "/services/deep-freezers",
+    href: "/contact",
   },
   {
     id: "bottle-coolers",
     title: "Bottle Coolers",
     description: "Bottle cooler repair & servicing",
     image: "/bottle-cooler-maintenance.png",
-    href: "/services/bottle-coolers",
+    href: "/contact",
   },
   {
     id: "visi-coolers",
     title: "Visi Coolers",
     description: "Visi cooler repair & maintenance",
     image: "/visi-cooler-repair.png",
-    href: "/services/visi-coolers",
+    href: "/contact",
   },
   {
     id: "fow",
     title: "FOW (Freezer on Wheels)",
     description: "Mobile freezer unit servicing",
     image: "/placeholder-e2kxc.png",
-    href: "/services/fow",
+    href: "/contact",
   },
   {
     id: "water-coolers",
     title: "Water Coolers",
     description: "Water cooler repair & maintenance",
     image: "/water-cooler-repair.png",
-    href: "/services/water-coolers",
+    href: "/contact",
   },
   {
     id: "water-dispensers",
     title: "Water Dispensers",
     description: "Water dispenser servicing & repair",
     image: "/placeholder-stqsp.png",
-    href: "/services/water-dispensers",
+    href: "/contact",
   },
   {
     id: "refrigerator-vans",
     title: "Refrigerator Vans",
     description: "Commercial refrigerator van services",
     image: "/refrigerator-van-repair.png",
-    href: "/services/refrigerator-vans",
+    href: "/contact",
   },
   {
     id: "cold-rooms",
     title: "Cold Rooms",
     description: "Cold room installation & maintenance",
     image: "/placeholder-h7r34.png",
-    href: "/services/cold-rooms",
+    href: "/contact",
   },
 ]
 
@@ -365,22 +365,22 @@ export default function HomePage() {
               <h4 className="font-heading font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-sm opacity-80">
                 <li>
-                  <Link href="/services/ac-services" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     AC Services
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/refrigerators" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Refrigerators
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/deep-freezers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Deep Freezers
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/water-coolers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Water Coolers
                   </Link>
                 </li>

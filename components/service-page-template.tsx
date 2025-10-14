@@ -107,9 +107,6 @@ export function ServicePageTemplate({
             </Link>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/services" className="text-foreground hover:text-primary transition-colors">
-              Services
-            </Link>
             <Link href="/about" className="text-foreground hover:text-primary transition-colors">
               About
             </Link>
@@ -141,13 +138,6 @@ export function ServicePageTemplate({
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-border bg-background">
             <nav className="container mx-auto px-4 py-4 space-y-4">
-              <Link
-                href="/services"
-                className="block text-foreground hover:text-primary transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Services
-              </Link>
               <Link
                 href="/about"
                 className="block text-foreground hover:text-primary transition-colors py-2"
@@ -196,7 +186,7 @@ export function ServicePageTemplate({
                   href="/"
                   className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  ← Back to Services
+                  ← Back to Home
                 </Link>
                 <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-foreground leading-tight">
                   {serviceName}
@@ -388,17 +378,17 @@ export function ServicePageTemplate({
               <h4 className="font-heading font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-sm opacity-80">
                 <li>
-                  <Link href="/services/ac-services" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     AC Services
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/refrigerators" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Refrigerators
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services/deep-freezers" className="hover:opacity-100 transition-opacity">
+                  <Link href="/contact" className="hover:opacity-100 transition-opacity">
                     Deep Freezers
                   </Link>
                 </li>

@@ -3,7 +3,11 @@ import type { Metadata } from "next"
 import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import Navigation from "@/components/navigation"
-
+import { CartProvider } from "@/contexts/cart-context"
+import { BookingProvider } from "@/contexts/booking-context"
+import { AuthProvider } from "@/contexts/auth-context"
+import { Toaster } from "@/components/ui/toaster"
+import { TechnicianProvider } from "@/contexts/technician-context"
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -31,9 +35,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable} antialiased`}>
       <body className="font-body">
-        <Navigation />
-        {children}
+        <AuthProvider>
+          <TechnicianProvider>
+            <CartProvider>
+              <BookingProvider>
+                <Navigation />
+                {children}
+                <Toaster />
+              </BookingProvider>
+            </CartProvider>
+          </TechnicianProvider>
+        </AuthProvider>
       </body>
     </html>
   )
 }
+
