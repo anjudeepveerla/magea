@@ -34,7 +34,7 @@ export default function LoginPage() {
         (formData.email === "demo@maega.app" && formData.password === "maega123")
       ) {
         login({ name: "Maega Customer", email: formData.email })
-        router.push("/")
+        router.push("/dashboard")
         return
       }
       alert("Invalid credentials. Use customer@maega.app / maega123")

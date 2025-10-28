@@ -13,7 +13,8 @@ function getSecretKey() {
 
 // Only protect these routes
 export const config = {
-  matcher: ["/dashboard/:path*", "/book/:path*"],
+  // For demo, allow dashboard without enforcing auth; keep booking protected
+  matcher: ["/book/:path*"],
 };
 
 export async function middleware(req: NextRequest) {

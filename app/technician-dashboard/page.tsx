@@ -59,8 +59,9 @@ export default function TechnicianDashboardPage() {
       </header>
       
       <div className="pt-8">
-			<div className="container mx-auto px-4">
-				<div className="grid md:grid-cols-4 gap-6">
+            <div className="container mx-auto px-4">
+                {/* Use 1 column on mobile, 4 cols on md+ for better alignment */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 					{/* Sidebar */}
 					<div className="md:col-span-1 space-y-2">
 						<Card className="border-0 shadow-md">
@@ -78,11 +79,11 @@ export default function TechnicianDashboardPage() {
 					</div>
 
 					{/* Main */}
-					<div className="md:col-span-3 space-y-6">
+                    <div className="md:col-span-3 space-y-6">
 						{tab === "dashboard" && (
 							<>
 								<h2 className="text-2xl font-heading font-bold">Hi, {technician?.name || "Technician"} 👋</h2>
-								<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 									<Card className="border-0 shadow-md">
 										<CardContent className="p-6 flex items-center justify-between">
 											<div>
@@ -119,9 +120,9 @@ export default function TechnicianDashboardPage() {
 								<CardHeader>
 									<CardTitle>My Bookings</CardTitle>
 								</CardHeader>
-								<CardContent>
-									<div className="overflow-x-auto">
-										<table className="w-full text-sm">
+                                <CardContent>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm min-w-[600px]">
 											<thead>
 												<tr className="text-left text-muted-foreground">
 													<th className="py-2">Booking ID</th>
