@@ -228,13 +228,25 @@ export default function Navigation() {
                 )}
               </Link>
               {isAuthenticated ? (
-                <Link
-                  href="/dashboard"
-                  className="text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  My Account
-                </Link>
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-blue-600"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    My Account
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      logout()
+                    }}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200 font-medium text-left py-3 px-4 rounded-xl touch-manipulation border-l-4 border-transparent hover:border-red-600"
+                  >
+                    Logout
+                  </button>
+                </>
               ) : null}
             </div>
           </nav>

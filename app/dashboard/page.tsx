@@ -88,13 +88,13 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground mt-2">Manage your bookings and account settings</p>
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Account</h1>
+          <p className="text-muted-foreground mt-1 md:mt-2">Manage your bookings and account settings</p>
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
           <Card className="border-0 shadow-md">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -150,8 +150,8 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-96">
+        <Tabs defaultValue="bookings" className="space-y-4 md:space-y-6">
+          <TabsList className="grid w-full grid-cols-4 lg:w-96 sticky top-16 z-10 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <TabsTrigger value="bookings">My Bookings</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -160,14 +160,14 @@ export default function DashboardPage() {
 
           <TabsContent value="bookings" className="space-y-6">
             {/* Quick Actions */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <Button className="bg-primary hover:bg-primary/90" asChild>
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
+              <Button className="bg-primary hover:bg-primary/90 w-full sm:w-auto" asChild>
                 <Link href="/services">
                   <Plus className="w-4 h-4 mr-2" />
                   Book New Service
                 </Link>
               </Button>
-              <Button variant="outline" asChild>
+              <Button variant="outline" className="w-full sm:w-auto" asChild>
                 <Link href="/cart">
                   <Truck className="w-4 h-4 mr-2" />
                   View Cart
@@ -176,12 +176,12 @@ export default function DashboardPage() {
             </div>
 
             {/* Search and Filter */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input placeholder="Search bookings..." className="pl-10" />
               </div>
-              <Button variant="outline">
+              <Button variant="outline" className="sm:min-w-[120px]">
                 <Filter className="w-4 h-4 mr-2" />
                 Filter
               </Button>
@@ -192,112 +192,109 @@ export default function DashboardPage() {
               <h2 className="text-xl font-semibold text-foreground">Recent Bookings</h2>
               {bookings.map((booking) => (
                 <Card key={booking.id} className="border-0 shadow-md">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-3">
-                          <h3 className="text-lg font-semibold text-foreground">{booking.service}</h3>
-                          <Badge className={`${getStatusColor(booking.status)} border`}>
-                            {getStatusIcon(booking.status)}
-                            <span className="ml-1 capitalize">{booking.status.replace("-", " ")}</span>
-                          </Badge>
-                        </div>
+                  <CardContent className="p-5 md:p-6">
+                    {/* Header */}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4 mb-3">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base md:text-lg font-semibold text-foreground">{booking.service}</h3>
+                        <Badge className={`${getStatusColor(booking.status)} border`}>
+                          {getStatusIcon(booking.status)}
+                          <span className="ml-1 capitalize">{booking.status.replace("-", " ")}</span>
+                        </Badge>
+                      </div>
+                      <p className="text-xs md:text-sm text-muted-foreground">Booking ID: {booking.id}</p>
+                    </div>
 
-                        <p className="text-muted-foreground mb-3">{booking.subService}</p>
+                    {/* Subtitle */}
+                    <p className="text-muted-foreground text-sm md:text-base mb-4">{booking.subService}</p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-muted-foreground mb-4">
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-2" />
-                            {new Date(booking.date).toLocaleDateString("en-IN", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="w-4 h-4 mr-2" />
-                            {booking.time}
-                          </div>
-                          <div className="flex items-center">
-                            <User className="w-4 h-4 mr-2" />
-                            {booking.technician}
-                          </div>
-                          <div className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-2" />
-                            {booking.address}
-                          </div>
-                        </div>
+                    {/* Meta */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 text-[13px] md:text-sm text-muted-foreground mb-4">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {new Date(booking.date).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {booking.time}
+                      </div>
+                      <div className="flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        {booking.technician}
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        {booking.address}
+                      </div>
+                    </div>
 
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <span className="text-lg font-semibold text-foreground">
-                              {formatCurrency(booking.amount)}
-                            </span>
-                            {booking.rating && (
-                              <div className="flex items-center">
-                                <span className="text-sm text-muted-foreground mr-2">Your Rating:</span>
-                                <div className="flex">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star
-                                      key={i}
-                                      className={`w-4 h-4 ${
-                                        i < booking.rating! ? "text-yellow-400 fill-current" : "text-gray-300"
-                                      }`}
-                                    />
-                                  ))}
-                                </div>
-                              </div>
-                            )}
+                    <Separator className="my-3 md:my-4" />
+
+                    {/* Footer */}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div className="flex items-center gap-4">
+                        <span className="text-lg font-semibold text-foreground">{formatCurrency(booking.amount)}</span>
+                        {booking.rating && (
+                          <div className="flex items-center">
+                            <span className="text-sm text-muted-foreground mr-2">Your Rating:</span>
+                            <div className="flex">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${i < booking.rating! ? "text-yellow-400 fill-current" : "text-gray-300"}`}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
 
-                      <div className="text-right ml-6">
-                        <p className="text-sm font-medium text-foreground mb-2">Booking ID: {booking.id}</p>
-                        <div className="flex flex-col space-y-2">
-                          {booking.status === "scheduled" && (
-                            <>
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                onClick={() => {
-                                  // In a real app, this would open a reschedule modal
-                                  const newDate = prompt("Enter new date (YYYY-MM-DD):")
-                                  const newTime = prompt("Enter new time (e.g., 2:00 PM):")
-                                  if (newDate && newTime) {
-                                    rescheduleBooking(booking.id, newDate, newTime)
-                                  }
-                                }}
-                              >
-                                Reschedule
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
-                                className="text-red-600 hover:text-red-700"
-                                onClick={() => {
-                                  if (confirm("Are you sure you want to cancel this booking?")) {
-                                    cancelBooking(booking.id)
-                                  }
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                            </>
-                          )}
-                          {booking.status === "in-progress" && (
-                            <Button size="sm" variant="outline">
-                              <MessageCircle className="w-4 h-4 mr-2" />
-                              Contact Technician
+                      <div className="flex flex-wrap gap-2">
+                        {booking.status === "scheduled" && (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                const newDate = prompt("Enter new date (YYYY-MM-DD):")
+                                const newTime = prompt("Enter new time (e.g., 2:00 PM):")
+                                if (newDate && newTime) {
+                                  rescheduleBooking(booking.id, newDate, newTime)
+                                }
+                              }}
+                            >
+                              Reschedule
                             </Button>
-                          )}
-                          {booking.status === "completed" && (
-                            <Button size="sm" variant="outline">
-                              <Download className="w-4 h-4 mr-2" />
-                              Download Receipt
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 hover:text-red-700"
+                              onClick={() => {
+                                if (confirm("Are you sure you want to cancel this booking?")) {
+                                  cancelBooking(booking.id)
+                                }
+                              }}
+                            >
+                              Cancel
                             </Button>
-                          )}
-                        </div>
+                          </>
+                        )}
+                        {booking.status === "in-progress" && (
+                          <Button size="sm" variant="outline">
+                            <MessageCircle className="w-4 h-4 mr-2" />
+                            Contact Technician
+                          </Button>
+                        )}
+                        {booking.status === "completed" && (
+                          <Button size="sm" variant="outline">
+                            <Download className="w-4 h-4 mr-2" />
+                            Download Receipt
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </CardContent>
